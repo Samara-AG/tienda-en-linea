@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tecnoteca | Tecnología y accesorios</title>
+
+    <!-- Bootstrap 5 y Bootstrap Icons (CDN) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Estilos propios del equipo (css/style.css) -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- ===== Barra de navegación (misma en carrito_detalles.html) ===== -->
+    <nav id="barra-navegacion" class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html"><i class="bi bi-cpu"></i> Tecnoteca</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu-principal"
+                aria-controls="menu-principal" aria-expanded="false" aria-label="Abrir menú">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="menu-principal">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a id="enlace-productos" class="nav-link" href="#productos">Productos</a></li>
+                    <li class="nav-item"><a id="enlace-contacto" class="nav-link" href="#contacto">Contacto</a></li>
+                    <li class="nav-item">
+                        <a id="enlace-carrito" class="nav-link" href="carrito_detalles.html">
+                            <i class="bi bi-cart3"></i> Carrito
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== Contenedor de alertas (lo llena mostrarAlerta en JS) ===== -->
+    <div id="contenedor-alertas" class="position-fixed top-0 end-0 p-3" aria-live="polite"></div>
+
+    <main>
+
+        <!-- ===== Presentación ===== -->
+        <header class="container py-5">
+            <h1 class="display-5">Tecnología y accesorios para tu día a día</h1>
+            <p class="lead">Audífonos, mochilas, teclados y más. Elige lo que necesitas y agrégalo a tu carrito.</p>
+            <a href="#productos" class="btn btn-primary btn-lg">Ver productos</a>
+        </header>
+
+        <!-- ===== Catálogo de productos (11 productos) ===== -->
+        <section id="productos" class="container py-5">
+            <h2 class="mb-4">Productos</h2>
+            <div id="contenedor-productos" class="row g-4">
+
+                <!-- Producto 1 -->
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                    <article class="card tarjeta-producto h-100">
+                        <img src="img/producto1.jpg" class="card-img-top imagen-producto" alt="Audífonos inalámbricos"
+                            width="300" height="300" loading="lazy">
+                        <div class="card-body d-flex flex-column">
+                            <h3 class="card-title h5 nombre-producto">Audífonos inalámbricos</h3>
+                            <p class="card-text precio-producto">$499</p>
+                            <button type="button" class="btn btn-primary btn-agregar mt-auto" data-id="1"
+                                data-nombre="Audífonos inalámbricos" data-precio="499">
+                                <i class="bi bi-cart-plus"></i> Añadir al carrito
+                            </button>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Producto 2 -->
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                    <article class="card tarjeta-producto h-100">
+                        <img src="img/producto2.jpg" class="card-img-top imagen-producto" alt="Mochila para laptop"
+                            width="300" height="300" loading="lazy">
+                        <div class="card-body d-flex flex-column">
+                            <h3 class="card-title h5 nombre-producto">Mochila para laptop</h3>
+                            <p class="card-text precio-producto">$650</p>
+                            <button type="button" class="btn btn-primary btn-agregar mt-auto" data-id="2"
+                                data-nombre="Mochila para laptop" data-precio="650">
+                                <i class="bi bi-cart-plus"></i> Añadir al carrito
+                            </button>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Producto 3 -->
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                    <article class="card tarjeta-producto h-100">
+                        <img src="img/producto3.jpg" class="card-img-top imagen-producto" alt="Mouse inalámbrico"
+                            width="300" height="300" loading="lazy">
+                        <div class="card-body d-flex flex-column">
+                            <h3 class="card-title h5 nombre-producto">Mouse inalámbrico</h3>
+                            <p class="card-text precio-producto">$199</p>
+                            <button type="button" class="btn btn-primary btn-agregar mt-auto" data-id="3"
+                                data-nombre="Mouse inalámbrico" data-precio="199">
+                                <i class="bi bi-cart-plus"></i> Añadir al carrito
+                            </button>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Producto 4 -->
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                    <article class="card tarjeta-producto h-100">
+                        <img src="img/producto4.jpg" class="card-img-top imagen-producto" alt="Teclado mecánico"
+                            width="300" height="300" loading="lazy">
+                        <div class="card-body d-flex flex-column">
+                            <h3 class="card-title h5 nombre-producto">Teclado mecánico</h3>
+                            <p class="card-text precio-producto">$850</p>
+                            <button type="button" class="btn btn-primary btn-agregar mt-auto" data-id="4"
+                                data-nombre="Teclado mecánico" data-precio="850">
+                                <i class="bi bi-cart-plus"></i> Añadir al carrito
+                            </button>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Producto 5 -->
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                    <article class="card tarjeta-producto h-100">
+                        <img src="img/producto5.jpg" class="card-img-top imagen-producto" alt="Cargador USB-C 20W"
+                            width="300" height="300" loading="lazy">
+                        <div class="card-body d-flex flex-column">
+                            <h3 class="card-title h5 nombre-producto">Cargador USB-C 20W</h3>
+                            <p class="card-text precio-producto">$249</p>
+                            <button type="button" class="btn btn-primary btn-agregar mt-auto" data-id="5"
+                                data-nombre="Cargador USB-C 20W" data-precio="249">
+                                <i class="bi bi-cart-plus"></i> Añadir al carrito
+                            </button>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Producto 6 -->
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                    <article class="card tarjeta-producto h-100">
+                        <img src="img/producto6.jpg" class="card-img-top imagen-producto" alt="Webcam HD"
+                            width="300" height="300" loading="lazy">
+                        <div class="card-body d-flex flex-column">
+                            <h3 class="card-title h5 nombre-producto">Webcam HD</h3>
+                            <p class="card-text precio-producto">$399</p>
+                            <button type="button" class="btn btn-primary btn-agregar mt-auto" data-id="6"
+                                data-nombre="Webcam HD" data-precio="399">
+                                <i class="bi bi-cart-plus"></i> Añadir al carrito
+                            </button>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Producto 7 -->
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                    <article class="card tarjeta-producto h-100">
+                        <img src="img/producto7.jpg" class="card-img-top imagen-producto" alt="Soporte para laptop"
+                            width="300" height="300" loading="lazy">
+                        <div class="card-body d-flex flex-column">
+                            <h3 class="card-title h5 nombre-producto">Soporte para laptop</h3>
+                            <p class="card-text precio-producto">$299</p>
+                            <button type="button" class="btn btn-primary btn-agregar mt-auto" data-id="7"
+                                data-nombre="Soporte para laptop" data-precio="299">
+                                <i class="bi bi-cart-plus"></i> Añadir al carrito
+                            </button>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Producto 8 -->
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                    <article class="card tarjeta-producto h-100">
+                        <img src="img/producto8.jpg" class="card-img-top imagen-producto" alt="Memoria USB 64 GB"
+                            width="300" height="300" loading="lazy">
+                        <div class="card-body d-flex flex-column">
+                            <h3 class="card-title h5 nombre-producto">Memoria USB 64 GB</h3>
+                            <p class="card-text precio-producto">$149</p>
+                            <button type="button" class="btn btn-primary btn-agregar mt-auto" data-id="8"
+                                data-nombre="Memoria USB 64 GB" data-precio="149">
+                                <i class="bi bi-cart-plus"></i> Añadir al carrito
+                            </button>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Producto 9 -->
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                    <article class="card tarjeta-producto h-100">
+                        <img src="img/producto9.jpg" class="card-img-top imagen-producto" alt="Bocina bluetooth"
+                            width="300" height="300" loading="lazy">
+                        <div class="card-body d-flex flex-column">
+                            <h3 class="card-title h5 nombre-producto">Bocina bluetooth</h3>
+                            <p class="card-text precio-producto">$549</p>
+                            <button type="button" class="btn btn-primary btn-agregar mt-auto" data-id="9"
+                                data-nombre="Bocina bluetooth" data-precio="549">
+                                <i class="bi bi-cart-plus"></i> Añadir al carrito
+                            </button>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Producto 10 -->
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                    <article class="card tarjeta-producto h-100">
+                        <img src="img/producto10.jpg" class="card-img-top imagen-producto" alt="Hub USB-C 4 puertos"
+                            width="300" height="300" loading="lazy">
+                        <div class="card-body d-flex flex-column">
+                            <h3 class="card-title h5 nombre-producto">Hub USB-C 4 puertos</h3>
+                            <p class="card-text precio-producto">$379</p>
+                            <button type="button" class="btn btn-primary btn-agregar mt-auto" data-id="10"
+                                data-nombre="Hub USB-C 4 puertos" data-precio="379">
+                                <i class="bi bi-cart-plus"></i> Añadir al carrito
+                            </button>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Producto 11 -->
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                    <article class="card tarjeta-producto h-100">
+                        <img src="img/producto11.jpg" class="card-img-top imagen-producto"
+                            alt="Mini teclado programable SayoDevice" width="300" height="300" loading="lazy">
+                        <div class="card-body d-flex flex-column">
+                            <h3 class="card-title h5 nombre-producto">Mini teclado programable SayoDevice</h3>
+                            <p class="card-text precio-producto">$1199</p>
+                            <button type="button" class="btn btn-primary btn-agregar mt-auto" data-id="11"
+                                data-nombre="Mini teclado programable SayoDevice" data-precio="1199">
+                                <i class="bi bi-cart-plus"></i> Añadir al carrito
+                            </button>
+                        </div>
+                    </article>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ===== Formulario de contacto ===== -->
+        <section id="contacto" class="container py-5">
+            <h2 class="mb-4">Contacto</h2>
+            <div class="row">
+                <div class="col-12 col-lg-8">
+                    <!-- novalidate: la validación la hace JavaScript y muestra alertas propias -->
+                    <form id="formulario-contacto" novalidate>
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre">
+                        </div>
+                        <div class="mb-3">
+                            <label for="correo" class="form-label">Correo electrónico</label>
+                            <input type="email" class="form-control" id="correo" name="correo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="mensaje" class="form-label">Mensaje</label>
+                            <textarea class="form-control" id="mensaje" name="mensaje" rows="4"></textarea>
+                        </div>
+                        <button type="submit" id="btn-enviar-contacto" class="btn btn-primary">Enviar mensaje</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-dark text-light py-4">
+        <div class="container">
+            <p class="mb-0">&copy; 2026 Tecnoteca. Proyecto académico, Desarrollo de Aplicaciones Web, BUAP-FCC.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts: primero Bootstrap, luego utilidades.js y al final script.js (en este orden) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/utilidades.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>
