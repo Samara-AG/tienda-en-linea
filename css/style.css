@@ -1,0 +1,765 @@
+/* ---------- 1. TIPOGRAFÍA ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap');
+
+
+/* ---------- 2. VARIABLES (paleta, radios, sombras) ---------- */
+:root {
+  /* Neutros */
+  --grafito: #1d1d1f;        /* texto principal */
+  --gris: #6e6e73;           /* texto secundario */
+  --fondo: #fbfbfd;          /* fondo de la página: blanco casi puro */
+  --linea: #e8e8ed;          /* líneas divisorias finas */
+  --blanco: #ffffff;         /* superficies y botones claros */
+
+  /* Pasteles */
+  --lavanda: #e8e4fa;
+  --menta: #d9f3e6;
+  --cielo: #dcecfb;
+  --rosa: #fce4ec;
+  --mantequilla: #fbf3d3;
+
+  /* Acento: lavanda intensa. */
+  --acento: #6c63d9;         /* enlaces, foco y botón de finalizar */
+  --acento-osc: #574ec0;     /* versión oscura para "presionado" */
+
+  /* Estados de alertas */
+  --error-icono: #d64555;    /* círculo del icono de error */
+  --error-fondo: #fdecef;    /* fondo suave de error */
+  --exito-icono: #2f9e66;    /* círculo del icono de éxito */
+  --exito-fondo: #e3f6ec;    /* fondo suave de éxito */
+
+  /* Formas */
+  --radio-s: 14px;           /* campos y alertas */
+  --radio-m: 24px;           /* tarjetas */
+  --radio-l: 32px;           /* paneles grandes (hero, formulario) */
+
+  /* Sombras de dos capas: una fina y otra difusa = efecto de "flotar" realista */
+  --sombra: 0 1px 2px rgba(29, 29, 31, 0.04), 0 8px 24px rgba(29, 29, 31, 0.06);
+  --sombra-hover: 0 2px 4px rgba(29, 29, 31, 0.05), 0 20px 44px rgba(29, 29, 31, 0.13);
+
+  --rapido: 0.25s;           /* duración estándar de transiciones */
+  --curva: cubic-bezier(0.22, 1, 0.36, 1); /* curva de animación suave: arranca rápido y frena despacio */
+
+  /* En Mac/iPhone se usa la fuente del sistema (San Francisco); en el
+     resto de equipos se carga Inter. */
+  --fuente: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+
+/* ---------- 3. BASE GLOBAL ---------- */
+html {
+  scroll-behavior: smooth;    /* los enlaces #productos / #contacto se deslizan suave */
+  scroll-padding-top: 4.5rem; /* al saltar a una sección, deja espacio para la barra fija */
+}
+
+html body {
+  font-family: var(--fuente);        /* tipografía de toda la tienda */
+  line-height: 1.6;                  /* interlineado cómodo */
+  color: var(--grafito);             /* color del texto */
+  background-color: var(--fondo);    /* fondo de la página */
+  -webkit-font-smoothing: antialiased; /* texto más fino en Safari/Mac */
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-weight: 600;                  /* semi-negrita: elegante, no pesada */
+  letter-spacing: -0.025em;          /* letras un poco más juntas (se ve moderno) */
+  line-height: 1.12;                 /* interlineado compacto en títulos */
+}
+
+a {
+  color: var(--acento);              /* enlaces en lavanda intensa */
+  text-decoration: none;             /* sin subrayado por defecto */
+}
+a:hover {
+  color: var(--acento-osc);          /* al pasar el mouse se oscurece */
+  text-decoration: underline;        /* y aparece el subrayado */
+  text-underline-offset: 3px;        /* separa el subrayado del texto */
+}
+
+::selection {
+  background: var(--lavanda);        /* fondo al seleccionar texto con el mouse */
+}
+
+/* Anillo de foco solo para quien navega con teclado (Tab). */
+:focus-visible {
+  outline: 3px solid rgba(108, 99, 217, 0.55); /* anillo lavanda semitransparente */
+  outline-offset: 3px;                         /* separado del elemento */
+}
+
+
+/* ---------- 4. BARRA DE NAVEGACIÓN (vidrio esmerilado) ----------
+   Se usa la clase .navbar (no el id) porque la barra del carrito es distinta
+   y no tiene id: así las DOS páginas quedan idénticas. */
+.navbar {
+  /* Bootstrap pinta .bg-dark y .bg-body-tertiary con !important, pero lee
+     estas variables. Se cambian a casi blanco (R,G,B) para que sea clara. */
+  --bs-dark-rgb: 251, 251, 253;         /* para la barra del inicio (.bg-dark) */
+  --bs-tertiary-bg-rgb: 251, 251, 253;  /* para la barra del carrito (.bg-body-tertiary) */
+  --bs-bg-opacity: 0.72;                /* 72% opaca: deja ver lo que pasa debajo */
+
+  /* Colores de los textos de la barra */
+  --bs-navbar-color: rgba(29, 29, 31, 0.72);   /* enlaces normales */
+  --bs-navbar-hover-color: var(--grafito);     /* enlace con el mouse encima */
+  --bs-navbar-active-color: var(--grafito);    /* enlace de la página actual */
+  --bs-navbar-brand-color: var(--grafito);     /* nombre "Tecnoteca" */
+  --bs-navbar-brand-hover-color: var(--grafito);
+  --bs-navbar-toggler-border-color: transparent; /* botón hamburguesa sin marco */
+  /* Rayitas de la hamburguesa en color grafito (SVG incrustado) */
+  --bs-navbar-toggler-icon-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%231d1d1f' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+
+  -webkit-backdrop-filter: saturate(180%) blur(20px); /* desenfoque del fondo (Safari) */
+  backdrop-filter: saturate(180%) blur(20px);         /* desenfoque + colores más vivos = vidrio */
+  border-bottom: 1px solid rgba(29, 29, 31, 0.08);    /* línea finísima inferior */
+}
+
+.navbar-brand {
+  font-size: 1.2rem;                 /* tamaño del logo */
+  font-weight: 650;                  /* peso intermedio */
+  letter-spacing: -0.03em;           /* letras más juntas */
+}
+.navbar-brand .bi {
+  color: var(--acento);              /* el chip en lavanda intensa */
+  margin-right: 0.3rem;              /* separa el icono del nombre */
+}
+
+.navbar .nav-link {
+  font-size: 0.9rem;                 /* enlaces pequeños y discretos */
+  font-weight: 500;                  /* peso medio */
+  transition: color var(--rapido);   /* cambio de color suave */
+}
+.navbar .nav-link.active {
+  font-weight: 600;                  /* la página actual se nota un poco más */
+}
+
+
+/* ---------- 5. PRESENTACIÓN (hero) ---------- */
+main > header.container {
+  position: relative;                /* referencia para ::before */
+  isolation: isolate;                /* capa propia: el fondo queda DETRÁS del texto */
+  display: flex;                     /* organiza el contenido en columna... */
+  flex-direction: column;            /* ...uno debajo de otro... */
+  align-items: center;               /* ...centrado horizontalmente */
+  justify-content: center;           /* y centrado verticalmente */
+  margin-top: 1.5rem;                /* separa el hero de la barra */
+  text-align: center;                /* textos centrados */
+  padding-left: calc(0.75rem + 1.25rem);  /* 0.75rem del container + aire interno */
+  padding-right: calc(0.75rem + 1.25rem);
+}
+main > header.container::before {
+  content: "";                       /* pseudo-elemento que hace de fondo */
+  position: absolute;                /* cubre todo el header */
+  inset: 0 0.75rem;                  /* arriba/abajo 0; lados 0.75rem (alineado a las tarjetas) */
+  z-index: -1;                       /* detrás del texto */
+  border-radius: var(--radio-l);     /* esquinas muy redondeadas */
+  background-color: var(--blanco);   /* base blanca */
+
+  background-image:
+    radial-gradient(45% 60% at 15% 25%, var(--lavanda), transparent 70%),
+    radial-gradient(40% 55% at 85% 20%, var(--menta), transparent 70%),
+    radial-gradient(50% 60% at 60% 100%, var(--rosa), transparent 70%),
+    radial-gradient(35% 45% at 5% 100%, var(--cielo), transparent 70%);
+  box-shadow: var(--sombra);         /* sombra suave: el panel "flota" */
+}
+main > header h1 {
+  max-width: 18ch;                   /* limita el ancho en caracteres: líneas equilibradas */
+  margin-bottom: 1rem;               /* separa el título del párrafo */
+  font-size: clamp(2.1rem, 1.2rem + 4.2vw, 4rem); /* tamaño fluido: crece con la pantalla */
+  font-weight: 700;                  /* negrita para impacto */
+  letter-spacing: -0.035em;          /* más junto aún: titular grande */
+}
+main > header .lead {
+  max-width: 40ch;                   /* línea de lectura cómoda */
+  font-size: clamp(1.05rem, 1rem + 0.5vw, 1.3rem); /* tamaño fluido */
+  font-weight: 400;                  /* peso normal */
+  color: var(--gris);                /* gris: jerarquía menor que el título */
+}
+
+
+/* ---------- 6. TÍTULOS DE SECCIÓN ---------- */
+#productos > h2,
+#contacto > h2 {
+  text-align: center;                /* centrados, como en las páginas de Apple */
+  font-size: clamp(1.9rem, 1.3rem + 2vw, 2.9rem); /* tamaño fluido */
+  font-weight: 700;                  /* negrita */
+  letter-spacing: -0.03em;           /* letras juntas */
+}
+
+
+/* ---------- 7. BOTONES ----------
+
+/* Base de todos los botones */
+.btn {
+  --bs-btn-border-width: 0;                  /* sin borde: más limpio */
+  --bs-btn-border-radius: 999px;             /* radio enorme = forma de píldora */
+  --bs-btn-focus-shadow-rgb: 108, 99, 217;   /* anillo de foco lavanda */
+  --bs-btn-font-weight: 500;                 /* peso medio */
+  transition: background-color var(--rapido), color var(--rapido), box-shadow var(--rapido), transform 0.25s var(--curva); /* anima color, sombra y movimiento */
+}
+.btn:active {
+  transform: scale(0.97);                    /* al presionar, se encoge un poco */
+}
+
+/* Principal: grafito. Se usa en "Ver productos" y "Enviar mensaje". */
+.btn-primary {
+  --bs-btn-color: var(--blanco);             /* texto */
+  --bs-btn-bg: var(--grafito);               /* fondo */
+  --bs-btn-border-color: var(--grafito);     /* borde */
+  --bs-btn-hover-color: var(--blanco);       /* texto con mouse encima */
+  --bs-btn-hover-bg: var(--acento);          /* fondo lavanda con mouse encima */
+  --bs-btn-hover-border-color: var(--acento);
+  --bs-btn-active-color: var(--blanco);      /* al presionar */
+  --bs-btn-active-bg: var(--acento-osc);
+  --bs-btn-active-border-color: var(--acento-osc);
+  padding-left: 1.6rem;                      /* más aire a los lados (forma de píldora) */
+  padding-right: 1.6rem;
+}
+
+/* "Añadir al carrito": blanco sobre la tarjeta pastel. */
+.btn-agregar {
+  --bs-btn-color: var(--grafito);            /* texto */
+  --bs-btn-bg: var(--blanco);                /* fondo blanco: resalta sobre el pastel */
+  --bs-btn-border-color: var(--blanco);
+  --bs-btn-hover-color: var(--blanco);       /* con mouse: se invierte... */
+  --bs-btn-hover-bg: var(--grafito);         /* ...a fondo grafito */
+  --bs-btn-hover-border-color: var(--grafito);
+  --bs-btn-active-color: var(--blanco);
+  --bs-btn-active-bg: var(--grafito);
+  --bs-btn-active-border-color: var(--grafito);
+  display: inline-flex;                      /* icono y texto en una fila */
+  align-items: center;                       /* centra el icono con el texto */
+  justify-content: center;                   /* centra todo en el botón */
+  gap: 0.5rem;                               /* espacio entre icono y texto */
+  padding: 0.65rem 1rem;                     /* altura cómoda para el dedo */
+  box-shadow: 0 1px 2px rgba(29, 29, 31, 0.08); /* sombrita para separarlo del pastel */
+}
+
+/* "Ver productos" (carrito vacío): contorno fino */
+.btn-outline-primary {
+  --bs-btn-color: var(--grafito);            /* texto */
+  --bs-btn-border-color: var(--grafito);     /* borde */
+  --bs-btn-hover-color: var(--blanco);       /* texto con mouse encima */
+  --bs-btn-hover-bg: var(--grafito);         /* fondo con mouse encima */
+  --bs-btn-hover-border-color: var(--grafito);
+  --bs-btn-active-color: var(--blanco);
+  --bs-btn-active-bg: var(--grafito);
+  --bs-btn-active-border-color: var(--grafito);
+  --bs-btn-border-width: 1px;                /* este sí lleva borde fino */
+}
+
+/* "Seguir comprando": enlace con forma de botón */
+.btn-link {
+  --bs-btn-color: var(--acento);             /* color normal */
+  --bs-btn-hover-color: var(--acento-osc);   /* color con mouse encima */
+  --bs-btn-font-weight: 500;
+}
+
+/* "Finalizar compra": lavanda intensa para distinguirlo del resto.
+   Bootstrap lo pinta verde (.btn-success): se reemplazan sus variables. */
+.btn-finalizar {
+  --bs-btn-color: var(--blanco);             /* texto */
+  --bs-btn-bg: var(--acento);                /* fondo lavanda intensa */
+  --bs-btn-border-color: var(--acento);
+  --bs-btn-hover-color: var(--blanco);       /* texto con mouse encima */
+  --bs-btn-hover-bg: var(--grafito);         /* fondo grafito con mouse encima */
+  --bs-btn-hover-border-color: var(--grafito);
+  --bs-btn-active-color: var(--blanco);      /* al presionar */
+  --bs-btn-active-bg: var(--acento-osc);
+  --bs-btn-active-border-color: var(--acento-osc);
+  --bs-btn-font-weight: 600;                 /* más peso: es la acción principal */
+}
+
+
+/* ---------- 8. TARJETAS ----------
+   Producto, carrito y resumen comparten forma y sombra. Se cambian las
+   variables --bs-card-* y Bootstrap redondea hasta la imagen de arriba. */
+.tarjeta-producto,
+.tarjeta-carrito,
+#resumen-compra {
+  --bs-card-border-width: 0;                 /* sin bordes: se separan con sombra */
+  --bs-card-bg: var(--blanco);               /* fondo base blanco (los pasteles lo reemplazan) */
+  --bs-card-border-radius: var(--radio-m);   /* esquinas redondeadas */
+  overflow: hidden;                          /* recorta imagen y contenido a las esquinas */
+  box-shadow: var(--sombra);                 /* sombra suave de dos capas */
+  transition: transform 0.45s var(--curva), box-shadow 0.45s var(--curva); /* movimiento y sombra con curva suave */
+}
+
+/* #resumen-compra trae .shadow-sm de Bootstrap (con !important).
+   Para ganarle hace falta otro !important; gana el id por ser más específico. */
+#resumen-compra {
+  --bs-card-border-radius: var(--radio-l);   /* panel más redondeado */
+  box-shadow: var(--sombra) !important;
+}
+
+/* ---- Colores pastel que se reparten entre las tarjetas ----
+   :nth-child(5n + 1) = "el 1.º, 6.º, 11.º hijo..." (cada 5). Cada columna del
+   catálogo y del carrito recibe un tono distinto; la tarjeta lo hereda. */
+#contenedor-productos > :nth-child(5n + 1),
+#lista-carrito > :nth-child(5n + 1) { --tono: var(--lavanda); }
+#contenedor-productos > :nth-child(5n + 2),
+#lista-carrito > :nth-child(5n + 2) { --tono: var(--menta); }
+#contenedor-productos > :nth-child(5n + 3),
+#lista-carrito > :nth-child(5n + 3) { --tono: var(--cielo); }
+#contenedor-productos > :nth-child(5n + 4),
+#lista-carrito > :nth-child(5n + 4) { --tono: var(--rosa); }
+#contenedor-productos > :nth-child(5n + 5),
+#lista-carrito > :nth-child(5n + 5) { --tono: var(--mantequilla); }
+
+.tarjeta-producto,
+.tarjeta-carrito {
+  --bs-card-bg: var(--tono, var(--blanco)); /* usa el tono pastel; si no hay, blanco */
+}
+
+/* ---- Tarjeta de producto ---- */
+/* Hover solo en dispositivos con mouse; en pantallas táctiles evita que la
+   tarjeta se quede "levantada" después de tocarla. */
+@media (hover: hover) {
+  .tarjeta-producto:hover {
+    transform: translateY(-8px) scale(1.012); /* la tarjeta sube y crece apenas (como si se acercara) */
+    box-shadow: var(--sombra-hover);         /* y su sombra se hace más grande y difusa */
+  }
+  .tarjeta-producto:hover .imagen-producto {
+    transform: scale(1.06);                  /* la foto se acerca dentro de su marco */
+  }
+  .tarjeta-carrito:hover {
+    box-shadow: var(--sombra-hover);         /* el artículo del carrito gana sombra */
+  }
+}
+
+.imagen-producto {
+  display: block;             /* quita el hueco blanco inferior de las imágenes "en línea" */
+  width: 100%;                /* ocupa todo el ancho de la tarjeta */
+  height: auto;               /* la altura la calcula aspect-ratio */
+  aspect-ratio: 1 / 1;        /* siempre cuadrada: todas las fotos quedan iguales */
+  object-fit: cover;          /* llena el cuadrado sin deformar ni dejar bordes vacíos */
+  margin: 0;                  /* sin márgenes */
+  padding: 0;                 /* sin relleno */
+  border: 0;                  /* sin borde propio */
+  border-radius: 0;           /* las esquinas las recorta la tarjeta (overflow: hidden) */
+  background: rgba(255, 255, 255, 0.6); /* velo claro mientras la foto carga (loading="lazy") */
+  transition: transform 0.8s var(--curva); /* el zoom es lento y elegante */
+}
+
+.tarjeta-producto .card-body {
+  gap: 0.35rem;               /* espacio entre nombre, precio y botón */
+  padding: 1.25rem;           /* aire interno generoso (menos es más) */
+}
+
+.nombre-producto {
+  margin: 0;                  /* el espacio lo da "gap" */
+  font-size: 1.05rem;         /* tamaño en móvil */
+  font-weight: 600;           /* semi-negrita */
+  letter-spacing: -0.015em;   /* letras un poco juntas */
+  line-height: 1.3;           /* interlineado */
+}
+
+.precio-producto {
+  margin: 0 0 0.75rem;        /* espacio debajo, antes del botón */
+  font-size: 1.15rem;         /* tamaño del precio */
+  font-weight: 500;           /* peso medio: elegante, sin etiqueta ni caja */
+  font-variant-numeric: tabular-nums; /* dígitos de igual ancho (se alinean entre tarjetas) */
+  color: var(--gris);         /* gris: el nombre manda, el precio acompaña */
+}
+
+
+/* ---------- 9. FORMULARIO DE CONTACTO ---------- */
+#contacto .row {
+  justify-content: center;    /* centra la columna del formulario en la página */
+}
+#formulario-contacto {
+  padding: 1.5rem;            /* aire interno del panel */
+  background: var(--blanco);  /* panel blanco */
+  border-radius: var(--radio-l); /* esquinas muy redondeadas */
+  box-shadow: var(--sombra);  /* sombra suave */
+}
+.form-label {
+  font-size: 0.9rem;          /* etiqueta pequeña */
+  font-weight: 500;           /* peso medio */
+  color: var(--gris);         /* gris discreto */
+}
+/* Campos "rellenos": fondo gris muy claro y sin borde visible (estilo iOS) */
+.form-control {
+  padding: 0.8rem 1rem;       /* campo más alto y cómodo */
+  background-color: #f5f5f7;  /* gris muy claro */
+  border: 1px solid transparent; /* borde invisible: reserva el espacio para el foco */
+  border-radius: var(--radio-s); /* esquinas redondeadas */
+  transition: background-color var(--rapido), border-color var(--rapido), box-shadow var(--rapido); /* anima el foco */
+}
+.form-control:focus {
+  background-color: var(--blanco);   /* al escribir, el campo se vuelve blanco */
+  border-color: var(--acento);       /* borde lavanda */
+  box-shadow: 0 0 0 4px rgba(108, 99, 217, 0.15); /* halo suave alrededor */
+}
+textarea.form-control {
+  resize: vertical;           /* solo se puede estirar hacia abajo (no rompe el diseño) */
+}
+
+
+/* ---------- 10. CARRITO (carrito_detalles.html) ---------- */
+.nombre-carrito {
+  margin-bottom: 0.25rem;     /* separa el nombre del precio */
+  font-size: 1.05rem;         /* tamaño del nombre */
+  font-weight: 600;           /* semi-negrita */
+}
+.precio-carrito {
+  margin: 0;                  /* sin margen extra */
+  font-size: 1.1rem;          /* tamaño del precio */
+  font-weight: 600;           /* semi-negrita */
+  font-variant-numeric: tabular-nums; /* dígitos alineados */
+  color: var(--grafito);      /* precio en color principal */
+}
+
+/* Mensaje "Tu carrito está vacío".
+   Usa .border, .rounded y .text-muted de Bootstrap (con !important), por eso
+   se cambian sus variables en vez de pelear con ellas. */
+#mensaje-vacio {
+  --bs-border-width: 1px;             /* borde finísimo */
+  --bs-border-style: solid;           /* línea continua */
+  --bs-border-color: var(--linea);    /* gris muy claro */
+  --bs-border-radius: var(--radio-l); /* esquinas muy redondeadas */
+  --bs-secondary-color: var(--gris);  /* color del texto .text-muted */
+  box-shadow: var(--sombra);          /* sombra suave */
+}
+#mensaje-vacio i {
+  color: var(--acento);               /* icono en lavanda (el tamaño lo define Daniel) */
+  opacity: 0.55;                      /* semitransparente: más delicado */
+}
+
+/* Panel "Resumen".
+   body #resumen-compra pesa más que #resumen-compra del <style> de Daniel;
+   así el panel queda debajo de la barra fija (5rem) al hacer scroll. */
+body #resumen-compra {
+  top: 5rem;                          /* distancia al hacer sticky */
+  --bs-border-color: var(--linea);    /* línea sobre el total en gris claro */
+}
+#resumen-compra .card-title {
+  font-weight: 600;                   /* título "Resumen" */
+}
+/* Total de la compra (el <span> con aria-live) */
+#resumen-compra [aria-live="polite"] {
+  font-weight: 700;                   /* negrita */
+  letter-spacing: -0.02em;            /* letras juntas */
+  font-variant-numeric: tabular-nums; /* dígitos de igual ancho: no "bailan" al cambiar */
+}
+
+
+/* ---------- 11. PIE DE PÁGINA ---------- */
+footer.bg-dark {
+  --bs-dark-rgb: 245, 245, 247;       /* gris Apple muy claro (anula el fondo oscuro) */
+  --bs-light-rgb: 110, 110, 115;      /* texto gris (para la clase .text-light) */
+  margin-top: 3rem;                   /* separa el pie del contenido */
+  border-top: 1px solid var(--linea); /* línea finísima superior */
+  font-size: 0.85rem;                 /* texto pequeño y discreto */
+}
+
+
+/* ---------- 12. ALERTAS (estilo notificación) ----------
+   JavaScript crea: <div class="alerta alert alerta-error alert-danger">.
+   Tiene clases de Bootstrap Y propias; las nuestras van después, así que ganan. */
+
+/* Contenedor flotante. Se define aquí para que AMBAS páginas se vean igual
+   (index.html lo posiciona con clases de Bootstrap; carrito_detalles.html no). */
+#contenedor-alertas {
+  position: fixed;          /* flota sobre la página aunque se haga scroll */
+  right: 0;                 /* pegado a la derecha */
+  top: 0;                   /* arriba; el margin-top lo baja bajo la barra */
+  width: 100%;              /* en móvil ocupa todo el ancho... */
+  max-width: 26rem;         /* ...y en pantallas grandes no pasa de 26rem */
+  margin-top: 3.5rem;       /* baja las alertas para que la barra no las tape */
+  padding: 1rem;            /* separa las alertas de los bordes de la pantalla */
+  z-index: 1080;            /* por encima de la barra (sticky-top vale 1020); sin esto
+                               las alertas quedarían DEBAJO de la barra */
+  pointer-events: none;     /* el contenedor no bloquea clics en lo que hay debajo
+                               (aunque esté vacío sigue ocupando espacio) */
+}
+
+.alerta {
+  display: flex;            /* icono y mensaje en una misma fila */
+  align-items: center;      /* centra verticalmente icono y texto */
+  gap: 0.8rem;              /* espacio entre icono y mensaje */
+  margin: 0 0 0.65rem;      /* separa una alerta de la siguiente */
+  padding: 0.85rem 1.1rem;  /* espacio interno */
+  font-size: 0.95rem;       /* texto un poco más pequeño */
+  font-weight: 500;         /* peso medio */
+  line-height: 1.35;        /* interlineado del mensaje */
+  color: var(--grafito);    /* texto oscuro (legible sobre fondos pastel) */
+  background-color: var(--blanco); /* fondo base; error y éxito lo reemplazan */
+  border: 1px solid rgba(29, 29, 31, 0.06); /* borde casi invisible (reemplaza el de Bootstrap) */
+  border-radius: 18px;      /* esquinas redondeadas tipo notificación */
+  box-shadow: 0 10px 30px rgba(29, 29, 31, 0.12); /* sombra difusa: flota sobre la página */
+  -webkit-backdrop-filter: blur(16px); /* desenfoque del fondo (Safari) */
+  backdrop-filter: blur(16px);         /* efecto vidrio detrás de la alerta */
+  pointer-events: auto;     /* las alertas sí aceptan clics/selección de texto */
+  /* ENTRADA: nombre | duración | curva (frena suave al final) | both = aplica el
+     estado inicial desde el primer instante y conserva el final */
+  animation: alerta-entrada 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Círculo con símbolo antes del mensaje, hecho solo con CSS (sin imágenes) */
+.alerta::before {
+  flex: 0 0 1.5rem;         /* ancho fijo: el círculo nunca se encoge */
+  width: 1.5rem;            /* ancho del círculo */
+  height: 1.5rem;           /* alto del círculo */
+  display: grid;            /* grid + place-items centra el símbolo */
+  place-items: center;      /* centrado horizontal y vertical */
+  font-size: 0.85rem;       /* tamaño del símbolo */
+  font-weight: 700;         /* símbolo grueso */
+  line-height: 1;           /* evita que el símbolo se desplace */
+  color: var(--blanco);     /* símbolo blanco */
+  border-radius: 50%;       /* 50% = círculo perfecto */
+}
+
+.alerta-error {
+  background-color: var(--error-fondo); /* fondo rosado suave: indica problema */
+}
+.alerta-error::before {
+  content: "!";                         /* símbolo de advertencia */
+  background: var(--error-icono);       /* círculo rojo */
+}
+
+.alerta-exito {
+  background-color: var(--exito-fondo); /* fondo verde menta: indica éxito */
+}
+.alerta-exito::before {
+  content: "\2713";                     /* símbolo ✓ (código Unicode) */
+  background: var(--exito-icono);       /* círculo verde */
+}
+
+/* SALIDA: a los 3 s el JS agrega .alerta-salida y 400 ms después elimina la
+   alerta. Esta animación dura 0.3 s (< 400 ms), así NUNCA se corta.
+   "forwards" mantiene el último fotograma (invisible) hasta que se elimina,
+   para que no parpadee de vuelta. ".alerta.alerta-salida" (2 clases) pesa más
+   que ".alerta" y reemplaza su animación. */
+.alerta.alerta-salida {
+  animation: alerta-salida 0.3s ease-in forwards;
+}
+
+/* @keyframes define los pasos de una animación: from = inicio, to = final */
+@keyframes alerta-entrada {
+  from {
+    opacity: 0;                              /* empieza invisible */
+    transform: translateY(-20px) scale(0.96); /* un poco arriba y pequeña (cae como notificación) */
+  }
+  to {
+    opacity: 1;                              /* termina visible */
+    transform: translateY(0) scale(1);       /* en su lugar y tamaño real */
+  }
+}
+@keyframes alerta-salida {
+  from {
+    opacity: 1;                              /* empieza visible */
+    transform: translateY(0) scale(1);       /* en su lugar */
+  }
+  to {
+    opacity: 0;                              /* se desvanece */
+    transform: translateY(-12px) scale(0.97); /* y sube un poco al irse */
+  }
+}
+
+
+/* ---------- 13. RESPONSIVO ----------
+   (min-width: X) = "cuando la pantalla mide X o más". Lo de arriba es para
+   móvil; cada bloque amplía para pantallas mayores. */
+
+/* Móvil (menos de 576 px) */
+@media (max-width: 575.98px) {
+  .tarjeta-producto {
+    max-width: 24rem;       /* en una sola columna la tarjeta no se estira de más... */
+    margin-inline: auto;    /* ...y se centra en la pantalla */
+  }
+}
+
+/* Menú colapsado (menos de 992 px): se da forma al menú desplegable */
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    padding-top: 0.5rem;    /* aire arriba de los enlaces */
+    border-top: 1px solid var(--linea); /* línea fina divisoria */
+    margin-top: 0.5rem;     /* separa el menú del logo */
+  }
+}
+
+/* Teléfono grande / tableta vertical (≥ 576 px) */
+@media (min-width: 576px) {
+  .nombre-producto {
+    min-height: 2.6em;      /* reserva 2 líneas: los precios quedan alineados entre tarjetas */
+  }
+  #formulario-contacto {
+    padding: 2.25rem;       /* más aire en el formulario */
+  }
+}
+
+/* Tableta (≥ 768 px) */
+@media (min-width: 768px) {
+  main > header.container {
+    min-height: 22rem;      /* el hero se vuelve más alto e imponente */
+  }
+}
+
+/* Escritorio pequeño (≥ 992 px) */
+@media (min-width: 992px) {
+  main > header.container {
+    min-height: 26rem;      /* hero aún más alto */
+  }
+  #resumen-compra .card-body {
+    padding: 1.75rem;       /* panel de resumen con más aire */
+  }
+}
+
+/* Escritorio grande (≥ 1200 px): 4 tarjetas por fila */
+@media (min-width: 1200px) {
+  .nombre-producto {
+    font-size: 1.1rem;      /* nombres un poco más grandes */
+  }
+}
+
+
+/* ---------- 13B. EFECTOS HOVER Y DETALLES FINOS ----------
+   Aquí solo hay movimiento y color al interactuar: no se agregan fondos
+   ni decoraciones nuevas. Va después de las demás reglas para que ganen. */
+
+/* Quita el destello gris que algunos celulares muestran al tocar un enlace o botón */
+a, button, .btn {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Los iconos de Bootstrap Icons son "en línea" y el navegador no deja
+   moverlos con transform; inline-block lo permite. */
+.btn .bi,
+.navbar-brand .bi {
+  display: inline-block;                    /* permite animar el icono */
+  transition: transform 0.35s var(--curva); /* el icono se mueve con la curva suave */
+}
+
+/* Colores que cambian suavemente (en vez de saltar de golpe) */
+.precio-producto,
+.form-label {
+  transition: color var(--rapido);          /* cambio de color gradual */
+}
+
+/* Navegación: al pasar el mouse aparece una "píldora" gris muy tenue */
+.navbar {
+  --bs-navbar-nav-link-padding-x: 0.9rem;   /* más aire a los lados de cada enlace */
+}
+.navbar .nav-link {
+  border-radius: var(--radio-s);            /* esquinas redondeadas de la píldora */
+  transition: color var(--rapido), background-color var(--rapido); /* cambios suaves */
+}
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+  background-color: rgba(29, 29, 31, 0.06); /* gris casi transparente */
+}
+
+/* Campos del formulario: se oscurecen un poquito al pasar el mouse
+   (menos el campo que ya está en uso) */
+.form-control:hover:not(:focus) {
+  background-color: #ececf0;                /* gris un tono más oscuro */
+}
+/* Cuando escribes en un campo, su etiqueta se pinta de lavanda
+   (:focus-within = "si algo dentro de este bloque tiene el foco") */
+#formulario-contacto .mb-3:focus-within .form-label {
+  color: var(--acento);                     /* etiqueta en color de marca */
+}
+
+/* Navegación con teclado: la tarjeta también se levanta cuando el botón
+   de adentro recibe el foco (así no es un efecto solo para el mouse). */
+.tarjeta-producto:focus-within {
+  transform: translateY(-6px);              /* la tarjeta sube */
+  box-shadow: var(--sombra-hover);          /* sombra grande */
+}
+
+/* Todo lo que depende del mouse va dentro de (hover: hover) para que en
+   celulares no se quede "pegado" después de tocar. */
+@media (hover: hover) {
+
+  /* Botones principales ("Enviar", "Ver productos", "Finalizar compra") */
+  .btn-primary:hover,
+  .btn-finalizar:hover {
+    transform: translateY(-2px);                    /* el botón se levanta */
+    box-shadow: 0 8px 20px rgba(108, 99, 217, 0.3); /* resplandor lavanda debajo */
+  }
+
+  /* "Añadir al carrito": sube un poco y proyecta una sombra suave */
+  .btn-agregar:hover {
+    transform: translateY(-1px);                    /* sube 1 px */
+    box-shadow: 0 6px 16px rgba(29, 29, 31, 0.18);  /* sombra más marcada que en reposo */
+  }
+
+  /* Al PRESIONAR un botón (clic): se encoge y pierde la sombra.
+     Esta regla pesa más (hover + active) que las de arriba. */
+  .btn:hover:active {
+    transform: scale(0.97);                         /* se hunde un poco */
+    box-shadow: none;                               /* sin sombra: efecto de presión */
+  }
+
+  /* Animación de los iconos dentro de los botones */
+  .btn-agregar:hover .bi {
+    transform: translateX(3px) rotate(-10deg) scale(1.15); /* el carrito "se lanza" un poquito */
+  }
+  .btn-finalizar:hover .bi {
+    transform: scale(1.2) rotate(-8deg);            /* la bolsa crece y se inclina */
+  }
+
+  /* "Seguir comprando": se desplaza un poco a la derecha, como invitando a avanzar */
+  .btn-link:hover {
+    transform: translateX(4px);
+  }
+
+  /* Al pasar el mouse por una tarjeta, su precio pasa de gris a grafito */
+  .tarjeta-producto:hover .precio-producto {
+    color: var(--grafito);                          /* el precio gana protagonismo */
+  }
+
+  /* Artículos del carrito: también se levantan */
+  .tarjeta-carrito:hover {
+    transform: translateY(-3px);                    /* sube 3 px */
+  }
+
+  /* El chip del logo se inclina al pasar el mouse por "Tecnoteca" */
+  .navbar-brand:hover .bi {
+    transform: rotate(-12deg) scale(1.15);          /* giro y crecimiento leves */
+  }
+}
+
+
+/* ---------- 14. ACCESIBILIDAD: MOVIMIENTO REDUCIDO ----------
+   Si la persona activó "reducir movimiento" en su sistema, se quitan los
+   desplazamientos y zooms. (El JS elimina la alerta igual, con o sin animación.) */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;  /* sin deslizamiento suave al ir a una sección */
+  }
+  .tarjeta-producto,
+  .tarjeta-carrito,
+  .imagen-producto,
+  .btn {
+    transition: none;       /* sin animaciones de hover */
+  }
+  .tarjeta-producto:hover,
+  .tarjeta-producto:hover .imagen-producto,
+  .btn:active {
+    transform: none;        /* sin desplazamiento/zoom */
+  }
+  .alerta,
+  .alerta.alerta-salida {
+    animation: none;        /* alertas sin movimiento */
+  }
+  .btn .bi,
+  .navbar-brand .bi,
+  .precio-producto,
+  .form-label,
+  .navbar .nav-link {
+    transition: none;       /* sin animación en iconos ni colores */
+  }
+  .btn-primary:hover,
+  .btn-finalizar:hover,
+  .btn-agregar:hover,
+  .btn-agregar:hover .bi,
+  .btn-finalizar:hover .bi,
+  .btn-link:hover,
+  .btn:hover:active,
+  .tarjeta-carrito:hover,
+  .tarjeta-producto:focus-within,
+  .navbar-brand:hover .bi {
+    transform: none;        /* sin desplazamiento, giro ni zoom */
+  }
+}
