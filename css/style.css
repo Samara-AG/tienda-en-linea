@@ -526,10 +526,10 @@ footer.bg-dark {
 }
 
 /* SALIDA: a los 3 s el JS agrega .alerta-salida y 400 ms después elimina la
-   alerta. Esta animación dura 0.3 s (< 400 ms), así NUNCA se corta.
-   "forwards" mantiene el último fotograma (invisible) hasta que se elimina,
-   para que no parpadee de vuelta. ".alerta.alerta-salida" (2 clases) pesa más
-   que ".alerta" y reemplaza su animación. */
+  alerta. Esta animación dura 0.3 s (< 400 ms), así NUNCA se corta.
+  "forwards" mantiene el último fotograma (invisible) hasta que se elimina,
+  para que no parpadee de vuelta. ".alerta.alerta-salida" (2 clases) pesa más
+  que ".alerta" y reemplaza su animación. */
 .alerta.alerta-salida {
   animation: alerta-salida 0.3s ease-in forwards;
 }
@@ -614,7 +614,7 @@ footer.bg-dark {
 
 
 /* ---------- 13B. EFECTOS HOVER Y DETALLES FINOS ----------
-   Aquí solo hay movimiento y color al interactuar: no se agregan fondos
+  Aquí solo hay movimiento y color al interactuar: no se agregan fondos
    ni decoraciones nuevas. Va después de las demás reglas para que ganen. */
 
 /* Quita el destello gris que algunos celulares muestran al tocar un enlace o botón */
@@ -722,8 +722,8 @@ a, button, .btn {
 
 
 /* ---------- 14. ACCESIBILIDAD: MOVIMIENTO REDUCIDO ----------
-   Si la persona activó "reducir movimiento" en su sistema, se quitan los
-   desplazamientos y zooms. (El JS elimina la alerta igual, con o sin animación.) */
+  Si la persona activó "reducir movimiento" en su sistema, se quitan los
+  desplazamientos y zooms. (El JS elimina la alerta igual, con o sin animación.) */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;  /* sin deslizamiento suave al ir a una sección */
