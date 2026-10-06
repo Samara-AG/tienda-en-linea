@@ -88,7 +88,8 @@ function mostrarCarrito() {
 
     mensajeVacio.classList.add('d-none');
 
-    carrito.forEach(function (producto) {
+    // El índice indica la posición del producto en la lista guardada.
+    carrito.forEach(function (producto, indice) {
         const columna = document.createElement('div');
         columna.className = 'col-12 col-md-6 col-lg-4 mb-3';
 
@@ -106,8 +107,23 @@ function mostrarCarrito() {
         precio.className = 'card-text precio-carrito';
         precio.textContent = '$' + Number(producto.precio).toFixed(2);
 
+        // Botón para quitar solo este producto (se usa la posición, no el id,
+        // porque un mismo producto puede estar repetido en el carrito).
+        const botonQuitar = document.createElement('button');
+        botonQuitar.type = 'button';
+        botonQuitar.className = 'btn btn-outline-primary btn-sm btn-quitar mt-2';
+        botonQuitar.textContent = 'Quitar';
+        botonQuitar.setAttribute('aria-label', 'Quitar ' + producto.nombre);
+
+        botonQuitar.addEventListener('click', function () {
+            eliminarDelCarrito(indice);
+            mostrarCarrito();
+            mostrarAlerta('Producto eliminado del carrito', 'exito');
+        });
+
         cuerpo.appendChild(nombre);
         cuerpo.appendChild(precio);
+        cuerpo.appendChild(botonQuitar);
         tarjeta.appendChild(cuerpo);
         columna.appendChild(tarjeta);
         lista.appendChild(columna);
