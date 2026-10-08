@@ -88,7 +88,8 @@ function mostrarCarrito() {
 
     mensajeVacio.classList.add('d-none');
 
-    carrito.forEach(function (producto) {
+    // El índice indica la posición del producto en la lista guardada.
+    carrito.forEach(function (producto, indice) {
         const columna = document.createElement('div');
         columna.className = 'col-12 col-md-6 col-lg-4 mb-3';
 
@@ -106,8 +107,23 @@ function mostrarCarrito() {
         precio.className = 'card-text precio-carrito';
         precio.textContent = '$' + Number(producto.precio).toFixed(2);
 
+        // Botón para quitar solo este producto (se usa la posición, no el id,
+        // porque un mismo producto puede estar repetido en el carrito).
+        const botonQuitar = document.createElement('button');
+        botonQuitar.type = 'button';
+        botonQuitar.className = 'btn btn-outline-primary btn-sm btn-quitar mt-2';
+        botonQuitar.textContent = 'Quitar';
+        botonQuitar.setAttribute('aria-label', 'Quitar ' + producto.nombre);
+
+        botonQuitar.addEventListener('click', function () {
+            eliminarDelCarrito(indice);
+            mostrarCarrito();
+            mostrarAlerta('Producto eliminado del carrito', 'exito');
+        });
+
         cuerpo.appendChild(nombre);
         cuerpo.appendChild(precio);
+        cuerpo.appendChild(botonQuitar);
         tarjeta.appendChild(cuerpo);
         columna.appendChild(tarjeta);
         lista.appendChild(columna);
@@ -118,12 +134,66 @@ function mostrarCarrito() {
     totalCompra.textContent = total.toFixed(2);
 }
 
+// Muestra la ventana con el resumen de la compra y después vacía el carrito.
+function finalizarCompra() {
+    const carrito = obtener('carrito');
+
+    if (carrito.length === 0) {
+        mostrarAlerta('Tu carrito está vacío. Agrega productos antes de finalizar.', 'error');
+        return;
+    }
+
+    const lista = document.getElementById('lista-compra');
+    const totalModal = document.getElementById('total-compra-modal');
+    const ventana = document.getElementById('modal-compra');
+
+    if (!lista || !totalModal || !ventana) {
+        return;
+    }
+
+    let total = 0;
+
+    lista.textContent = '';
+
+    carrito.forEach(function (producto) {
+        const elemento = document.createElement('li');
+        elemento.className = 'list-group-item d-flex justify-content-between';
+
+        const nombre = document.createElement('span');
+        nombre.textContent = producto.nombre;
+
+        const precio = document.createElement('span');
+        precio.textContent = '$' + Number(producto.precio).toFixed(2);
+
+        elemento.appendChild(nombre);
+        elemento.appendChild(precio);
+        lista.appendChild(elemento);
+
+        total += Number(producto.precio);
+    });
+
+    totalModal.textContent = total.toFixed(2);
+
+    bootstrap.Modal.getOrCreateInstance(ventana).show();
+
+    // La ventana ya tiene el resumen: ahora sí se vacía el carrito.
+    guardar('carrito', []);
+    mostrarCarrito();
+}
+
 // Activa solamente las funciones correspondientes a cada página.
 document.addEventListener('DOMContentLoaded', function () {
     const formulario = document.getElementById('formulario-contacto');
 
     if (formulario) {
         formulario.addEventListener('submit', validarContacto);
+    }
+
+    const botonFinalizar = document.getElementById('btn-finalizar');
+
+    // Este botón solamente existe en carrito_detalles.html.
+    if (botonFinalizar) {
+        botonFinalizar.addEventListener('click', finalizarCompra);
     }
 
     mostrarCarrito();

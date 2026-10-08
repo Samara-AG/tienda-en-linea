@@ -25,6 +25,14 @@ function agregarAlCarrito(producto) {
     mostrarAlerta('Producto añadido al carrito', 'exito');
 }
 
+// Quita del carrito el producto que está en esa posición de la lista.
+function eliminarDelCarrito(indice) {
+    const carrito = obtener('carrito');
+
+    carrito.splice(indice, 1);
+    guardar('carrito', carrito);
+}
+
 // Genera un respaldo del carrito en un archivo de texto.
 function exportarCarritoTxt() {
     const carrito = obtener('carrito');
