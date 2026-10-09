@@ -65,20 +65,41 @@ function validarContacto(evento) {
     evento.target.reset();
 }
 
+// Crea un botón pequeño con un icono de Bootstrap Icons.
+function crearBotonIcono(clases, icono, etiqueta) {
+    const boton = document.createElement('button');
+    const simbolo = document.createElement('i');
+
+    boton.type = 'button';
+    boton.className = 'btn btn-sm ' + clases;
+    boton.setAttribute('aria-label', etiqueta);
+
+    simbolo.className = 'bi ' + icono;
+    boton.appendChild(simbolo);
+
+    return boton;
+}
+
 // Muestra los productos guardados y calcula el total.
 function mostrarCarrito() {
     const lista = document.getElementById('lista-carrito');
     const totalCompra = document.getElementById('total-compra');
     const mensajeVacio = document.getElementById('mensaje-vacio');
+    const contador = document.getElementById('contador-carrito');
 
     if (!lista || !totalCompra || !mensajeVacio) {
         return;
     }
 
-    const carrito = obtener('carrito');
+    const carrito = obtenerCarrito();
     let total = 0;
 
     lista.textContent = '';
+
+    // Indicador de cuántos productos distintos hay en el carrito.
+    if (contador) {
+        contador.textContent = carrito.length > 0 ? '(' + carrito.length + ')' : '';
+    }
 
     if (carrito.length === 0) {
         mensajeVacio.classList.remove('d-none');
@@ -88,47 +109,100 @@ function mostrarCarrito() {
 
     mensajeVacio.classList.add('d-none');
 
-    // El índice indica la posición del producto en la lista guardada.
-    carrito.forEach(function (producto, indice) {
+    carrito.forEach(function (producto) {
+        const subtotal = producto.precio * producto.cantidad;
+
         const columna = document.createElement('div');
-        columna.className = 'col-12 col-md-6 col-lg-4 mb-3';
+        columna.className = 'col-12 mb-3';
 
         const tarjeta = document.createElement('div');
         tarjeta.className = 'card tarjeta-carrito h-100';
 
         const cuerpo = document.createElement('div');
-        cuerpo.className = 'card-body';
+        cuerpo.className = 'card-body d-flex align-items-center gap-3';
+
+        // Imagen del producto (los carritos guardados antes no la tienen).
+        if (producto.imagen) {
+            const imagen = document.createElement('img');
+
+            imagen.src = producto.imagen;
+            imagen.alt = producto.nombre;
+            imagen.width = 96;
+            imagen.height = 96;
+            imagen.className = 'imagen-carrito rounded object-fit-cover flex-shrink-0';
+            cuerpo.appendChild(imagen);
+        }
+
+        const detalle = document.createElement('div');
+        detalle.className = 'flex-grow-1';
+
+        // Fila superior: nombre del producto y botón de basura.
+        const encabezado = document.createElement('div');
+        encabezado.className = 'd-flex justify-content-between align-items-start gap-2';
 
         const nombre = document.createElement('h5');
         nombre.className = 'card-title nombre-carrito';
         nombre.textContent = producto.nombre;
 
-        const precio = document.createElement('p');
-        precio.className = 'card-text precio-carrito';
-        precio.textContent = '$' + Number(producto.precio).toFixed(2);
-
-        // Botón para quitar solo este producto (se usa la posición, no el id,
-        // porque un mismo producto puede estar repetido en el carrito).
-        const botonQuitar = document.createElement('button');
-        botonQuitar.type = 'button';
-        botonQuitar.className = 'btn btn-outline-primary btn-sm btn-quitar mt-2';
-        botonQuitar.textContent = 'Quitar';
-        botonQuitar.setAttribute('aria-label', 'Quitar ' + producto.nombre);
+        const botonQuitar = crearBotonIcono(
+            'btn-outline-danger btn-quitar',
+            'bi-trash',
+            'Quitar ' + producto.nombre
+        );
 
         botonQuitar.addEventListener('click', function () {
-            eliminarDelCarrito(indice);
+            eliminarDelCarrito(producto.id);
             mostrarCarrito();
             mostrarAlerta('Producto eliminado del carrito', 'exito');
         });
 
-        cuerpo.appendChild(nombre);
-        cuerpo.appendChild(precio);
-        cuerpo.appendChild(botonQuitar);
+        encabezado.appendChild(nombre);
+        encabezado.appendChild(botonQuitar);
+
+        const precio = document.createElement('p');
+        precio.className = 'card-text precio-carrito';
+        precio.textContent = '$' + producto.precio.toFixed(2) + ' c/u';
+
+        // Controles de cantidad: menos, número y más.
+        const controles = document.createElement('div');
+        controles.className = 'd-flex align-items-center gap-2 mb-2';
+
+        const botonMenos = crearBotonIcono('btn-light', 'bi-dash', 'Disminuir cantidad de ' + producto.nombre);
+        const cantidad = document.createElement('span');
+        const botonMas = crearBotonIcono('btn-light', 'bi-plus', 'Aumentar cantidad de ' + producto.nombre);
+
+        cantidad.className = 'fw-semibold px-1';
+        cantidad.textContent = producto.cantidad;
+        botonMenos.disabled = producto.cantidad <= 1;
+
+        botonMenos.addEventListener('click', function () {
+            cambiarCantidad(producto.id, -1);
+            mostrarCarrito();
+        });
+
+        botonMas.addEventListener('click', function () {
+            cambiarCantidad(producto.id, 1);
+            mostrarCarrito();
+        });
+
+        controles.appendChild(botonMenos);
+        controles.appendChild(cantidad);
+        controles.appendChild(botonMas);
+
+        const textoSubtotal = document.createElement('p');
+        textoSubtotal.className = 'card-text fw-semibold mb-0';
+        textoSubtotal.textContent = 'Subtotal: $' + subtotal.toFixed(2);
+
+        detalle.appendChild(encabezado);
+        detalle.appendChild(precio);
+        detalle.appendChild(controles);
+        detalle.appendChild(textoSubtotal);
+        cuerpo.appendChild(detalle);
         tarjeta.appendChild(cuerpo);
         columna.appendChild(tarjeta);
         lista.appendChild(columna);
 
-        total += Number(producto.precio);
+        total += subtotal;
     });
 
     totalCompra.textContent = total.toFixed(2);
@@ -136,7 +210,7 @@ function mostrarCarrito() {
 
 // Muestra la ventana con el resumen de la compra y después vacía el carrito.
 function finalizarCompra() {
-    const carrito = obtener('carrito');
+    const carrito = obtenerCarrito();
 
     if (carrito.length === 0) {
         mostrarAlerta('Tu carrito está vacío. Agrega productos antes de finalizar.', 'error');
@@ -156,20 +230,22 @@ function finalizarCompra() {
     lista.textContent = '';
 
     carrito.forEach(function (producto) {
+        const subtotal = producto.precio * producto.cantidad;
+
         const elemento = document.createElement('li');
         elemento.className = 'list-group-item d-flex justify-content-between';
 
         const nombre = document.createElement('span');
-        nombre.textContent = producto.nombre;
+        nombre.textContent = producto.nombre + ' (x' + producto.cantidad + ')';
 
         const precio = document.createElement('span');
-        precio.textContent = '$' + Number(producto.precio).toFixed(2);
+        precio.textContent = '$' + subtotal.toFixed(2);
 
         elemento.appendChild(nombre);
         elemento.appendChild(precio);
         lista.appendChild(elemento);
 
-        total += Number(producto.precio);
+        total += subtotal;
     });
 
     totalModal.textContent = total.toFixed(2);
