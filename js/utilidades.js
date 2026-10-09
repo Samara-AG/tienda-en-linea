@@ -49,7 +49,7 @@ function agregarAlCarrito(producto) {
     });
 
     if (existente) {
-        existente.cantidad += 1;
+        existente.cantidad = Math.min(99, existente.cantidad + 1);
     } else {
         // El precio debe ser un número para poder sumar correctamente.
         carrito.push({
