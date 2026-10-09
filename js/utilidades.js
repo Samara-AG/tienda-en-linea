@@ -8,34 +8,91 @@ function guardar(clave, datos) {
     localStorage.setItem(clave, JSON.stringify(datos));
 }
 
-// Agrega el producto y guarda el carrito actualizado.
+// Lee el carrito con la forma {id, nombre, precio, cantidad}.
+// Junta los productos repetidos sumando su cantidad y arregla los carritos
+// guardados antes de que existiera la cantidad (les asigna 1).
+function obtenerCarrito() {
+    const guardado = obtener('carrito');
+    const carrito = [];
+
+    guardado.forEach(function (producto) {
+        const id = Number(producto.id);
+        const cantidad = Number(producto.cantidad) || 1;
+
+        const existente = carrito.find(function (item) {
+            return item.id === id;
+        });
+
+        if (existente) {
+            existente.cantidad += cantidad;
+        } else {
+            carrito.push({
+                id: id,
+                nombre: producto.nombre,
+                precio: Number(producto.precio),
+                cantidad: cantidad
+            });
+        }
+    });
+
+    return carrito;
+}
+
+// Agrega el producto (o suma 1 a su cantidad si ya estaba) y guarda el carrito.
 function agregarAlCarrito(producto) {
-    const carrito = obtener('carrito');
+    const carrito = obtenerCarrito();
+    const id = Number(producto.id);
 
-    // El precio debe ser un número para poder sumar correctamente.
-    const productoNuevo = {
-        id: Number(producto.id),
-        nombre: producto.nombre,
-        precio: Number(producto.precio)
-    };
+    const existente = carrito.find(function (item) {
+        return item.id === id;
+    });
 
-    carrito.push(productoNuevo);
+    if (existente) {
+        existente.cantidad += 1;
+    } else {
+        // El precio debe ser un número para poder sumar correctamente.
+        carrito.push({
+            id: id,
+            nombre: producto.nombre,
+            precio: Number(producto.precio),
+            cantidad: 1
+        });
+    }
+
     guardar('carrito', carrito);
 
     mostrarAlerta('Producto añadido al carrito', 'exito');
 }
 
-// Quita del carrito el producto que está en esa posición de la lista.
-function eliminarDelCarrito(indice) {
-    const carrito = obtener('carrito');
+// Sube o baja la cantidad de un producto (cambio vale 1 o -1).
+// La cantidad nunca baja de 1: para quitar el producto se usa eliminarDelCarrito.
+function cambiarCantidad(id, cambio) {
+    const carrito = obtenerCarrito();
 
-    carrito.splice(indice, 1);
+    const producto = carrito.find(function (item) {
+        return item.id === Number(id);
+    });
+
+    if (!producto) {
+        return;
+    }
+
+    producto.cantidad = Math.min(99, Math.max(1, producto.cantidad + cambio));
+    guardar('carrito', carrito);
+}
+
+// Quita del carrito el producto con ese id (todas sus unidades).
+function eliminarDelCarrito(id) {
+    const carrito = obtenerCarrito().filter(function (item) {
+        return item.id !== Number(id);
+    });
+
     guardar('carrito', carrito);
 }
 
 // Genera un respaldo del carrito en un archivo de texto.
 function exportarCarritoTxt() {
-    const carrito = obtener('carrito');
+    const carrito = obtenerCarrito();
 
     if (carrito.length === 0) {
         mostrarAlerta(
@@ -52,12 +109,13 @@ function exportarCarritoTxt() {
     contenido += '='.repeat(40) + '\n\n';
 
     carrito.forEach(function (producto) {
-        const precio = Number(producto.precio);
+        const subtotal = producto.precio * producto.cantidad;
 
         contenido += 'Producto: ' + producto.nombre;
-        contenido += ' - $' + precio.toLocaleString('es-MX') + '\n';
+        contenido += ' (x' + producto.cantidad + ')';
+        contenido += ' - $' + subtotal.toLocaleString('es-MX') + '\n';
 
-        total += precio;
+        total += subtotal;
     });
 
     // es-MX agrega la coma de miles: 1149 se muestra como 1,149.
