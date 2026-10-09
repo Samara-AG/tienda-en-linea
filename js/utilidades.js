@@ -39,7 +39,7 @@ function obtenerCarrito() {
     return carrito;
 }
 
-// Agrega el producto (o suma 1 a su cantidad si ya estaba) y guarda el carrito.
+// Agrega el producto (o suma 1 a su cantidad si ya estaba, hasta 99) y guarda el carrito.
 function agregarAlCarrito(producto) {
     const carrito = obtenerCarrito();
     const id = Number(producto.id);
@@ -49,7 +49,13 @@ function agregarAlCarrito(producto) {
     });
 
     if (existente) {
-        existente.cantidad = Math.min(99, existente.cantidad + 1);
+        // Tope de 99 unidades por producto (el mismo que usan los botones + del carrito).
+        if (existente.cantidad >= 99) {
+            mostrarAlerta('Ya tienes 99 unidades de este producto.', 'error');
+            return;
+        }
+
+        existente.cantidad += 1;
     } else {
         // El precio debe ser un número para poder sumar correctamente.
         carrito.push({
