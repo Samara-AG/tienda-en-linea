@@ -42,6 +42,7 @@ El sitio tiene dos páginas:
 
 ```
 tienda-en-linea/
+├── .gitattributes
 ├── index.html
 ├── carrito_detalles.html
 ├── README.md
@@ -54,6 +55,7 @@ tienda-en-linea/
     └── producto1 ... producto11 (imágenes de los productos)
 ```
 
+- **`.gitattributes`:** archivo de configuración de Git, creado junto con el repositorio. Indica cómo tratar los archivos de texto (por ejemplo, sus saltos de línea) y no afecta el funcionamiento del sitio.
 - **`css/style.css`:** estilos propios sobre Bootstrap: paleta, tipografía, rejilla responsiva, tarjetas y animaciones de las alertas.
 - **`js/utilidades.js`:** funciones del carrito y de los datos: `obtener`, `guardar`, `obtenerCarrito`, `agregarAlCarrito`, `cambiarCantidad`, `eliminarDelCarrito` y la exportación a TXT.
 - **`js/script.js`:** alertas, validación del formulario, vista del carrito y finalizar compra.
