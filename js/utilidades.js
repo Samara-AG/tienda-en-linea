@@ -8,7 +8,7 @@ function guardar(clave, datos) {
     localStorage.setItem(clave, JSON.stringify(datos));
 }
 
-// Lee el carrito con la forma {id, nombre, precio, cantidad}.
+// Lee el carrito con la forma {id, nombre, precio, cantidad, imagen}.
 // Junta los productos repetidos sumando su cantidad y arregla los carritos
 // guardados antes de que existiera la cantidad (les asigna 1).
 function obtenerCarrito() {
@@ -30,7 +30,8 @@ function obtenerCarrito() {
                 id: id,
                 nombre: producto.nombre,
                 precio: Number(producto.precio),
-                cantidad: cantidad
+                cantidad: cantidad,
+                imagen: producto.imagen || ''
             });
         }
     });
@@ -55,7 +56,8 @@ function agregarAlCarrito(producto) {
             id: id,
             nombre: producto.nombre,
             precio: Number(producto.precio),
-            cantidad: 1
+            cantidad: 1,
+            imagen: producto.imagen || ''
         });
     }
 
@@ -90,18 +92,9 @@ function eliminarDelCarrito(id) {
     guardar('carrito', carrito);
 }
 
-// Genera un respaldo del carrito en un archivo de texto.
-function exportarCarritoTxt() {
+// Arma el texto del carrito.txt con el formato del ejemplo del profesor.
+function generarTextoCarrito() {
     const carrito = obtenerCarrito();
-
-    if (carrito.length === 0) {
-        mostrarAlerta(
-            'El carrito está vacío. Agrega productos antes de exportar.',
-            'error'
-        );
-        return;
-    }
-
     let total = 0;
     let contenido = 'Resumen de compra - Tienda en Línea\n';
 
@@ -125,6 +118,11 @@ function exportarCarritoTxt() {
         maximumFractionDigits: 2
     }) + '\n';
 
+    return contenido;
+}
+
+// Descarga un texto como el archivo carrito.txt.
+function descargarTxt(contenido) {
     // El Blob convierte el texto en un archivo descargable.
     const archivo = new Blob([contenido], {
         type: 'text/plain;charset=utf-8'
@@ -146,6 +144,30 @@ function exportarCarritoTxt() {
     }, 1000);
 }
 
+// Muestra una vista previa del carrito.txt; desde esa ventana se descarga.
+function exportarCarritoTxt() {
+    if (obtenerCarrito().length === 0) {
+        mostrarAlerta(
+            'El carrito está vacío. Agrega productos antes de exportar.',
+            'error'
+        );
+        return;
+    }
+
+    const contenido = generarTextoCarrito();
+    const vista = document.getElementById('contenido-txt');
+    const ventana = document.getElementById('modal-txt');
+
+    // Si la página no tiene la ventana de vista previa, descarga directo.
+    if (!vista || !ventana) {
+        descargarTxt(contenido);
+        return;
+    }
+
+    vista.textContent = contenido;
+    bootstrap.Modal.getOrCreateInstance(ventana).show();
+}
+
 // Conecta los botones cuando el HTML termina de cargar.
 document.addEventListener('DOMContentLoaded', function () {
     const botonesAgregar = document.querySelectorAll('.btn-agregar');
@@ -153,10 +175,15 @@ document.addEventListener('DOMContentLoaded', function () {
     // En la página del carrito no hay estos botones: no se ejecuta el recorrido.
     botonesAgregar.forEach(function (boton) {
         boton.addEventListener('click', function () {
+            // La imagen se toma de la propia tarjeta del producto.
+            const tarjeta = boton.closest('.tarjeta-producto');
+            const foto = tarjeta ? tarjeta.querySelector('.imagen-producto') : null;
+
             const producto = {
                 id: Number(boton.dataset.id),
                 nombre: boton.dataset.nombre,
-                precio: Number(boton.dataset.precio)
+                precio: Number(boton.dataset.precio),
+                imagen: foto ? foto.getAttribute('src') : ''
             };
 
             agregarAlCarrito(producto);
@@ -168,5 +195,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // Este botón solamente existe en carrito_detalles.html.
     if (botonExportar) {
         botonExportar.addEventListener('click', exportarCarritoTxt);
+    }
+
+    const botonDescargar = document.getElementById('btn-descargar-txt');
+
+    // Botón de la ventana de vista previa: descarga lo que se está viendo.
+    if (botonDescargar) {
+        botonDescargar.addEventListener('click', function () {
+            descargarTxt(document.getElementById('contenido-txt').textContent);
+        });
     }
 });

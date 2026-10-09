@@ -85,6 +85,7 @@ function mostrarCarrito() {
     const lista = document.getElementById('lista-carrito');
     const totalCompra = document.getElementById('total-compra');
     const mensajeVacio = document.getElementById('mensaje-vacio');
+    const contador = document.getElementById('contador-carrito');
 
     if (!lista || !totalCompra || !mensajeVacio) {
         return;
@@ -94,6 +95,11 @@ function mostrarCarrito() {
     let total = 0;
 
     lista.textContent = '';
+
+    // Indicador de cuántos productos distintos hay en el carrito.
+    if (contador) {
+        contador.textContent = carrito.length > 0 ? '(' + carrito.length + ')' : '';
+    }
 
     if (carrito.length === 0) {
         mensajeVacio.classList.remove('d-none');
@@ -107,13 +113,28 @@ function mostrarCarrito() {
         const subtotal = producto.precio * producto.cantidad;
 
         const columna = document.createElement('div');
-        columna.className = 'col-12 col-md-6 col-lg-4 mb-3';
+        columna.className = 'col-12 mb-3';
 
         const tarjeta = document.createElement('div');
         tarjeta.className = 'card tarjeta-carrito h-100';
 
         const cuerpo = document.createElement('div');
-        cuerpo.className = 'card-body';
+        cuerpo.className = 'card-body d-flex align-items-center gap-3';
+
+        // Imagen del producto (los carritos guardados antes no la tienen).
+        if (producto.imagen) {
+            const imagen = document.createElement('img');
+
+            imagen.src = producto.imagen;
+            imagen.alt = producto.nombre;
+            imagen.width = 96;
+            imagen.height = 96;
+            imagen.className = 'imagen-carrito rounded object-fit-cover flex-shrink-0';
+            cuerpo.appendChild(imagen);
+        }
+
+        const detalle = document.createElement('div');
+        detalle.className = 'flex-grow-1';
 
         // Fila superior: nombre del producto y botón de basura.
         const encabezado = document.createElement('div');
@@ -172,10 +193,11 @@ function mostrarCarrito() {
         textoSubtotal.className = 'card-text fw-semibold mb-0';
         textoSubtotal.textContent = 'Subtotal: $' + subtotal.toFixed(2);
 
-        cuerpo.appendChild(encabezado);
-        cuerpo.appendChild(precio);
-        cuerpo.appendChild(controles);
-        cuerpo.appendChild(textoSubtotal);
+        detalle.appendChild(encabezado);
+        detalle.appendChild(precio);
+        detalle.appendChild(controles);
+        detalle.appendChild(textoSubtotal);
+        cuerpo.appendChild(detalle);
         tarjeta.appendChild(cuerpo);
         columna.appendChild(tarjeta);
         lista.appendChild(columna);
